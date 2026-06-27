@@ -1,6 +1,11 @@
+use std::sync::LazyLock;
+
 use rocket::Config;
 
-use crate::{config::EnvironmentVariables, repository::DatabaseConnection};
+use crate::{
+    config::{EnvironmentVariables, cors::CorsConfig},
+    repository::DatabaseConnection,
+};
 
 mod config;
 mod repository;
@@ -8,18 +13,21 @@ mod repository;
 #[macro_use]
 extern crate log;
 
+pub static ENV_VARS: LazyLock<EnvironmentVariables> =
+    LazyLock::new(|| EnvironmentVariables::load());
+
 #[rocket::launch]
 async fn launch() -> _ {
     env_logger::init();
 
-    let env_vars = EnvironmentVariables::load().expect("Failed to load environment variables");
-    let pool_conn = DatabaseConnection::init(env_vars.database_url()).pool;
+    let pool_conn = DatabaseConnection::init(ENV_VARS.database_url()).pool;
 
     let config = Config::figment()
-        .merge(("port", env_vars.port()))
-        .merge(("address", env_vars.address()));
+        .merge(("port", ENV_VARS.port()))
+        .merge(("address", ENV_VARS.address()));
 
     rocket::build()
         .configure(config)
+        .attach(CorsConfig)
         .manage(pool_conn)
 }

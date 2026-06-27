@@ -1,36 +1,80 @@
-use std::env;
+pub mod cors;
 
+use std::env::var;
+
+#[derive(Debug, Default)]
 pub struct EnvironmentVariables {
     address: String,
     port: u16,
     database_url: String,
-    allowed_origin: String,
+    cors_allowed_origin: String,
 }
 
 impl EnvironmentVariables {
-    pub fn load() -> Result<Self, String> {
-        dotenvy::dotenv().ok();
+    pub fn load() -> Self {
+        info!("Trying to load environment variables.");
 
-        let address =
-            env::var("ADDRESS").map_err(|e| format!("Failed to load ADDRESS variable: {}", e))?;
+        let _env = match dotenvy::dotenv() {
+            Ok(_) => {
+                info!("Success loading .env file")
+            }
+            Err(err) => {
+                error!("Error loading .env file: {err}");
+                warn!("Error loading .env file, relying on environment variables")
+            }
+        };
 
-        let port = env::var("PORT")
-            .map_err(|err| format!("Failed to load PORT variable: {}", err))?
-            .parse()
-            .map_err(|err| format!("Failed to parse string to u16: {}", err))?;
+        let mut environment_vars = EnvironmentVariables::default();
 
-        let database_url = env::var("DATABASE_URL")
-            .map_err(|e| format!("Failed to load DATABASE_URL variable: {}", e))?;
+        info!("Trying to load PORT variable");
+        match var("PORT") {
+            Ok(port) => match port.parse::<u16>() {
+                Ok(port) => {
+                    info!("Loaded PORT variable with success");
+                    environment_vars.port = port;
+                }
+                Err(err) => {
+                    panic!("Failed to convert string to u16: {err}");
+                }
+            },
+            Err(err) => {
+                panic!("Failed to load PORT variable: {err}")
+            }
+        }
 
-        let allowed_origin = env::var("ALLOWED_ORIGIN")
-            .map_err(|e| format!("Failed to load ALLOWED_ORIGIN variable: {}", e))?;
+        info!("Trying to load ADDRESS variable");
+        match var("ADDRESS") {
+            Ok(address) => {
+                info!("Loaded ADDRESS variable with success");
+                environment_vars.address = address;
+            }
+            Err(err) => {
+                panic!("Failed to load ADDRESS variable: {err}")
+            }
+        }
 
-        Ok(Self {
-            address,
-            port,
-            database_url,
-            allowed_origin,
-        })
+        info!("Trying to load DATABASE_URL variable");
+        match var("DATABASE_URL") {
+            Ok(database_url) => {
+                info!("Loaded DATABASE_URL variable with success");
+                environment_vars.database_url = database_url;
+            }
+            Err(err) => {
+                panic!("Failed to load DATABASE_URL variable: {err}")
+            }
+        }
+
+        info!("Trying to load ALLOWED_ORIGIN variable");
+        match var("ALLOWED_ORIGIN") {
+            Ok(allowed_origin) => {
+                info!("Loaded ALLOWED_ORIGIN variable with success");
+                environment_vars.cors_allowed_origin = allowed_origin;
+            }
+            Err(err) => {
+                panic!("Failed to load ALLOWED_ORIGIN variable: {err}")
+            }
+        }
+        environment_vars
     }
 
     pub fn address(&self) -> &str {
@@ -45,7 +89,7 @@ impl EnvironmentVariables {
         &self.database_url
     }
 
-    pub fn allowed_origin(&self) -> &str {
-        &self.allowed_origin
+    pub fn cors_allowed_origin(&self) -> &str {
+        &self.cors_allowed_origin
     }
 }
