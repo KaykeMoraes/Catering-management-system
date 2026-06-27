@@ -1,38 +1,54 @@
 use std::env;
 
+use dotenvy::dotenv;
 use rocket::figment::Figment;
 
-pub struct Config {
+pub struct EnvironmentVariables {
     address: String,
     port: u16,
+    database_url: String,
+    allowed_origin: String,
 }
 
-impl Config {
-    pub fn init() -> Self {
-        let env_file = dotenvy::dotenv();
-        if env_file.is_err() {
-            error!("Error trying to load .env file: {}", env_file.unwrap_err());
-            warn!("Failed to get .env file, relying on environment variables");
-        }
+impl EnvironmentVariables {
+    pub fn load() -> Result<Self, String> {
+        dotenvy::dotenv().ok();
+
+        let address =
+            env::var("ADDRESS").map_err(|e| format!("Failed to load ADDRESS variable: {}", e))?;
 
         let port = env::var("PORT")
-            .inspect_err(|err| error!("Error trying to load PORT variable: {}", err))
-            .expect("Failed to get PORT variable");
+            .map_err(|err| format!("Failed to load PORT variable: {}", err))?
+            .parse()
+            .map_err(|err| format!("Failed to parse string to u16: {}", err))?;
 
-        let port_str: u16 = port.parse().expect("Failed to parse PORT to u16");
+        let database_url = env::var("DATABASE_URL")
+            .map_err(|e| format!("Failed to load DATABASE_URL variable: {}", e))?;
 
-        let address = env::var("ADDRESS")
-            .inspect_err(|err| error!("Error trying to load ADDRESS variable: {}", err))
-            .expect("Failed to load ADDRESS variable");
+        let allowed_origin = env::var("ALLOWED_ORIGIN")
+            .map_err(|e| format!("Failed to load ALLOWED_ORIGIN variable: {}", e))?;
 
-        Self {
-            address: address,
-            port: port_str,
-        }
+        Ok(Self {
+            address,
+            port,
+            database_url,
+            allowed_origin,
+        })
     }
-    pub fn to_rocket(&self) -> Figment {
-        rocket::Config::figment()
-            .merge(("port", self.port))
-            .merge(("address", &self.address))
+
+    pub fn address(&self) -> &str {
+        &self.address
+    }
+
+    pub fn port(&self) -> u16 {
+        self.port
+    }
+
+    pub fn database_url(&self) -> &str {
+        &self.database_url
+    }
+
+    pub fn allowed_origin(&self) -> &str {
+        &self.allowed_origin
     }
 }

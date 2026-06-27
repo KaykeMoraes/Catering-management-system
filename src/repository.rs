@@ -8,10 +8,8 @@ pub struct DatabaseConnection {
 }
 
 impl DatabaseConnection {
-    pub fn init() -> Self {
-        dotenv().ok();
-        let database_url = env::var("DATABASE_URL").expect("Failed to load DATABASE_URL variable");
-        let connection = PgPool::connect_lazy(&database_url);
+    pub fn init(database_url: &str) -> Self {
+        let connection = PgPool::connect_lazy(database_url);
         if connection.is_err() {
             error!(
                 "Failed to get connection with the database: {}",
