@@ -1,10 +1,9 @@
-use std::env;
+use std::sync::Arc;
 
-use dotenvy::dotenv;
 use sqlx::PgPool;
 
 pub struct DatabaseConnection {
-    pool: PgPool,
+    pub pool: Arc<PgPool>,
 }
 
 impl DatabaseConnection {
@@ -18,7 +17,7 @@ impl DatabaseConnection {
             panic!("Failed to connect to database");
         }
         Self {
-            pool: connection.unwrap(),
+            pool: Arc::new(connection.unwrap()),
         }
     }
 }

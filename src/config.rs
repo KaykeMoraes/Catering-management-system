@@ -1,8 +1,5 @@
 use std::env;
 
-use dotenvy::dotenv;
-use rocket::figment::Figment;
-
 pub struct EnvironmentVariables {
     address: String,
     port: u16,
