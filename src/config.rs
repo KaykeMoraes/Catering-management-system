@@ -21,7 +21,7 @@ impl Config {
 
         let port_str: u16 = port.parse().expect("Failed to parse PORT to u16");
 
-        let address = env::var("ADRESS")
+        let address = env::var("ADDRESS")
             .inspect_err(|err| error!("Error trying to load ADDRESS variable: {}", err))
             .expect("Failed to load ADDRESS variable");
 
@@ -30,8 +30,8 @@ impl Config {
             port: port_str,
         }
     }
-    pub fn to_figment(&self) -> Figment {
-        Figment::new()
+    pub fn to_rocket(&self) -> Figment {
+        rocket::Config::figment()
             .merge(("port", self.port))
             .merge(("address", &self.address))
     }
