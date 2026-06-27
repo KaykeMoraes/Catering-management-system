@@ -1,6 +1,7 @@
 use crate::config::Config;
 
 mod config;
+mod repository;
 
 #[macro_use]
 extern crate log;

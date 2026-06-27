@@ -11,6 +11,7 @@
       nativeBuildInputs = with pkgs; [
         rustup
       ];
+      RUST_LOG = "info";
       shellHook = ''
         rustup toolchain install stable &>/dev/null
       '';
