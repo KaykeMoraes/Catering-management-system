@@ -1,6 +1,13 @@
-#[macro_use] extern crate log;
+use crate::config::Config;
 
-fn main() {
+mod config;
+
+#[macro_use]
+extern crate log;
+
+#[rocket::launch]
+async fn launch() -> _ {
     env_logger::init();
-    dotenvy::dotenv().ok();
+    let config = Config::init().to_figment();
+    rocket::build().configure(config)
 }
