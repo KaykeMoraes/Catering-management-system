@@ -8,6 +8,7 @@ use crate::{
 };
 
 mod config;
+mod entity;
 mod repository;
 
 #[macro_use]
