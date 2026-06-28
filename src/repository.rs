@@ -8,7 +8,9 @@ pub struct DatabaseConnection {
 
 impl DatabaseConnection {
     pub fn init(database_url: &str) -> Self {
+        info!("Trying to establish connection with the database..");
         let connection = PgPool::connect_lazy(database_url);
+
         if connection.is_err() {
             error!(
                 "Failed to get connection with the database: {}",
@@ -16,6 +18,9 @@ impl DatabaseConnection {
             );
             panic!("Failed to connect to database");
         }
+
+        info!("Connection established with success");
+
         Self {
             pool: Arc::new(connection.unwrap()),
         }
