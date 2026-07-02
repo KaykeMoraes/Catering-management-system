@@ -8,8 +8,9 @@ use crate::{
 };
 
 mod config;
-mod entity;
+mod model;
 mod repository;
+mod utils;
 
 #[macro_use]
 extern crate log;
