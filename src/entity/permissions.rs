@@ -1,0 +1,18 @@
+pub enum Permissions {
+    ManageUsers,
+    ConfigurePermissions,
+    MonitorBusinessPerformance,
+    AccessReports,
+    AuditSystemActivity,
+    RegisterCustomers,
+    CreateQuotations,
+    ScheduleEvents,
+    RecordCustomerInformation,
+    ViewUpcomingEvents,
+    PrepareRecepies,
+    ManageMenuItems,
+    TrackIngredientUsage,
+    MonitorInventoryAvailability,
+    ViewingAssignedEvents,
+    ConfirmCompletedServices,
+}
