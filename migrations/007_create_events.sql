@@ -1,3 +1,8 @@
 CREATE TABLE IF NOT EXISTS events(
-  
+    id BIGINT GENERATED ALWAYS AS IDENTITY,
+    date_time TIMESTAMPTZ NOT NULL,
+    guest_count INT NOT NULL,
+    event_type VARCHAR(55) NOT NULL,
+    payment_status VARCHAR(55) NOT NULL,
+    notes TEXT
 );
