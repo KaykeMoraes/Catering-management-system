@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS quote_items (
+  id BIGINT GENERATED ALWAYS AS IDENTITY,
+  quote_id BIGINT NOT NULL,
+  menu_item_id BIGINT NOT NULL,
+  quantity INT NOT NULL,
+  unit_price DECIMAL(10, 2) NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (quote_id) REFERENCES quotes (id) ON DELETE CASCADE,
+  FOREIGN KEY (menu_item_id) REFERENCES menu_items (id) ON DELETE CASCADE
+);
