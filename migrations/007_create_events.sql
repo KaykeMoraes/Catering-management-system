@@ -4,5 +4,6 @@ CREATE TABLE IF NOT EXISTS events (
   guest_count INT NOT NULL,
   event_type VARCHAR(55) NOT NULL,
   payment_status VARCHAR(55) NOT NULL,
-  notes TEXT
+  notes TEXT,
+  PRIMARY KEY (id)
 );

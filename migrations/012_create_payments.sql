@@ -9,5 +9,6 @@ CREATE TABLE payments (
   method payment_method NOT NULL,
   status TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  paid_at TIMESTAMPTZ
+  paid_at TIMESTAMPTZ,
+  PRIMARY KEY (id)
 );

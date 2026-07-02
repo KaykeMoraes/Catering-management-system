@@ -15,5 +15,6 @@ CREATE TABLE IF NOT EXISTS quotes (
   total DECIMAL(10, 2),
   notes TEXT,
   expires_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY(id)
 );
