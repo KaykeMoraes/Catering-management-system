@@ -3,13 +3,13 @@ use std::sync::LazyLock;
 use rocket::Config;
 
 use crate::{
-    config::{EnvironmentVariables, cors::CorsConfig},
-    repository::DatabaseConnection,
+    configs::{EnvironmentVariables, cors::CorsConfig},
+    repositories::database::DatabaseConnection,
 };
 
-mod config;
-mod model;
-mod repository;
+mod configs;
+mod models;
+mod repositories;
 mod utils;
 
 #[macro_use]
